@@ -1,20 +1,4 @@
 
-function find_date(){
-    //
-    // Заполняет список годов элементами
-    //
-    var select = document.getElementById("user_year");
-    let year = new Date();
-    let date = year.getFullYear();
-
-    for (var i = 0; i < 6; ++i) {
-        var el = document.createElement("option");
-        el.text = Number(date)-i;
-        el.value = Number(date)-i;
-
-        select.add(el);
-    }
-}
 function hide_pop_up_window(event) {
     //
     // Скрывает всплывающее окно

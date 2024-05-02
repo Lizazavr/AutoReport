@@ -21,14 +21,17 @@
             <div>
             <select name="user_year" id="user_year" required>
                 <option disabled selected="selected">Год</option>
+                {% for year in range(now_year, now_year+5) %}
+                <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
                 </select>
                 </div>
         <div></div>
         <div>
-            <select name="user_term" id="user_term" required>
+            <select name="semester" id="semester" required>
                 <option disabled selected="selected">Семестр</option>
-                <option value="1">Осенний</option>
-                <option value="2">Весенний</option>
+                <option value="fall">Осенний</option>
+                <option value="spring">Весенний</option>
             </select>
         </div>
         <div>

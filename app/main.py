@@ -1,19 +1,8 @@
-from flask import Flask, render_template, request
-from flask import jsonify, render_template, send_file
-from flask import send_from_directory, flash
-from docx import Document
-from flask import redirect, url_for
-from htmldocx import HtmlToDocx
-from collections import defaultdict
-import mariadb
-import sys
-import os
-import unittest
-import webbrowser
 import datetime
 
-from werkzeug.utils import secure_filename
-from coverage import coverage
+from flask import Flask, render_template, request
+from flask import jsonify, render_template, send_file
+from datetime import date
 
 UPLOAD_FOLDER = 'doc'
 ALLOWED_EXTENSIONS = {'doc'}
@@ -42,7 +31,9 @@ def index():
     """
     global year, term, type_report, name_report
     if request.method == 'POST':
-        print("post")
+        #print("post")
+        year = request.form.get('year')
+        year = request.form.get('semester')
         values = request.form.get('type')
         if values == 'upload':
             print("Обновление бд")
@@ -67,8 +58,8 @@ def index():
             # return load_new_report(year, term, file)
             return render_template("report.html", type_report=type_report, name_report=name_report)
 
-
-    return render_template('main.html')
+    now_year = datetime.datetime.now().year
+    return render_template('main.html', now_year=now_year)
 
 @app.route('/report', methods=["POST", "GET"])
 def web_report():
