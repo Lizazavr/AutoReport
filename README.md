@@ -1,8 +1,10 @@
 
 Установка AutoReport в существующий проект в качестве подсистемы с использованием технологии Blueprint.
 1. Выполнить clone репозитория в существующий проект:
-2. `cd web/imit
-git clone https://github.com/Autoreport-Dev-Team/autoreport`
+```
+cd web/imit
+git clone https://github.com/Autoreport-Dev-Team/autoreport
+```
 3. Перейти в директорию проекта:
 ''''cd autoreport''''
 4. Установить зависимости из requirements.txt:
