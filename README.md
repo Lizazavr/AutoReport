@@ -6,14 +6,26 @@ cd web/imit
 git clone https://github.com/Autoreport-Dev-Team/autoreport
 ```
 3. Перейти в директорию проекта:
-''''cd autoreport''''
-4. Установить зависимости из requirements.txt:
-''''pip3 install -r requirements.txt''''
-5. В конфигурационном файле autoreport_config.py установить путь до файла с путями до файлов учебных планов:
-''''CONFIG_PLAN_FILES_PATH = "path/to/config.txt"''''
-6. Вернуться в директорию исходного проекта:
-''''cd ..''''
-7. В файле, где инициализируется экземпляр flask, импортировать autoreport:
-''''from autoreport.autoreport import autoreport''''
-8. И подключить подсистему autoreport к проекту:
-''''app.register_blueprint(autoreport, url_prefix='/autoreport'''''
+4. ```
+   cd autoreport
+   ```
+5. Установить зависимости из requirements.txt:
+```
+pip3 install -r requirements.txt
+```
+6. В конфигурационном файле autoreport_config.py установить путь до файла с путями до файлов учебных планов:
+```
+CONFIG_PLAN_FILES_PATH = "path/to/config.txt"
+```
+7. Вернуться в директорию исходного проекта:
+```
+cd ..
+```
+8. В файле, где инициализируется экземпляр flask, импортировать autoreport:
+```
+from autoreport.autoreport import autoreport
+```
+9. И подключить подсистему autoreport к проекту:
+```
+app.register_blueprint(autoreport, url_prefix='/autoreport'
+```
