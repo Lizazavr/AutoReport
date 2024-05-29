@@ -37,12 +37,12 @@ class ReportForm(FlaskForm):
 def index():
     form = ReportForm()
     if request.method == 'POST':
-        print("post")
         if form.validate_on_submit():
-            print("submit")
             if form.update_bd.data:
-                print("db")
-                find_db()
+                #answer = update_curriculum()
+                #answer = 'Данные об учебных планах обновлены', 'success'
+                answer, type_answer = 'Ошибка обновления данных', 'warning'
+                show_popup_message(answer, type_answer)
                 return redirect(url_for('index'))
             elif form.form_report.data:
                 pass
@@ -53,19 +53,11 @@ def index():
                 pass
     return render_template('main.html', form=form, now_year=datetime.now().year)
 
-def find_db():
-    print("db")
-    # Логика обновления данных об учебных планах
-    show_popup_message('Данные об учебных планах обновлены', 'success')
 
-def show_popup_message(message, type):
+def show_popup_message(message, type_message):
     # Функция для вывода всплывающего сообщения
-    if type == 'success':
-        # Вывод всплывающего сообщения в правом нижнем углу светло-желтого цвета с границей
-        flash(message, 'success')
-    elif type == 'warning':
-        # Вывод всплывающего сообщения в правом нижнем углу светло-желтого цвета с границей
-        flash(message, 'warning')
+    flash(message, type_message)
+
 
 @app.route('/report', methods=["POST", "GET"])
 def web_report():
