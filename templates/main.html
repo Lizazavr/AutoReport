@@ -1,47 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вторая страница</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <style>
         #myModal {
             display: none;
         }
     </style>
 </head>
-
 <body onload="find_date();">
-    <p class="text">Для формирования отчёта выберите год и семестр и нажмите кнопку “Сформировать отчёт”</p>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-yellow alert-dismissible fade show" role="alert" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; align-items: center;">
+        <div class="alert-icon">
+          {% if category == 'success' %}
+            <img src="static/image/true.svg" alt="Success" style="width: 50px; height: 50px;">
+          {% else %}
+            <img src="static/image/false.svg" alt="Error" style="width: 50px; height: 50px;">
+          {% endif %}
+        </div>
+        <div class="alert-message">{{ message }}</div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+    <p class="text">Для формирования отчёта выберите год и семестр и нажмите кнопку "Сформировать отчёт"</p>
     <form action="" method="post" class="buttons" id="form">
-        <!--<div id="selects">-->
-            <div>
-            <select name="user_year" id="user_year" required>
-                <option disabled selected="selected">Год</option>
-                {% for year in range(now_year, now_year+5) %}
-                <option value="{{ year }}">{{ year }}</option>
+        <div class="form-group">
+            <select id="{{ form.user_year.name }}" name="{{ form.user_year.name }}" class="form-control">
+                <option disabled selected>Год</option>
+                {% for year in form.user_year.choices %}
+                    <option value="{{ year[0] }}">{{ year[1] }}</option>
                 {% endfor %}
-                </select>
-                </div>
-        <div></div>
-        <div>
-            <select name="semester" id="semester" required>
-                <option disabled selected="selected">Семестр</option>
-                <option value="fall">Осенний</option>
-                <option value="spring">Весенний</option>
             </select>
         </div>
+        <div></div>
+        <div class="form-group">
+            <select id="{{ form.semester.name }}" name="{{ form.semester.name }}" class="form-control">
+                <option disabled selected>Семестр</option>
+                {% for semester in form.semester.choices %}
+                    <option value="{{ semester[0] }}">{{ semester[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {{ form.hidden_tag() }}
         <div>
-            <input class="button" id="update_bd" value="Обновить данные об &#13;&#10; учебных планах" type="submit" onclick="find_db();"></div>
-        <div>
-            <input class="button" id="form_report" value="Сформировать отчёт" type="submit" onclick="find_practic();">
+            {{ form.update_bd(class="button button-text-wrap") }}
         </div>
         <div>
-            <input class="button" id="dowland_report" value="Загрузить отчёт" enctype="multipart/form-data" type="submit" onclick="upload_report();"></div>
-
+            {{ form.form_report(class="btn btn-success button") }}
+        </div>
+        <div>
+            {{ form.dowland_report(class="btn btn-secondary button") }}
+        </div>
     </form>
     <div id="test"></div>
     <div id="modal">
@@ -51,13 +72,13 @@
                 <button class="button_window_1" onclick="hide_pop_up_window();">Ok</button>
             </div>
         </div>
+
         <div class="hystmodal" id="window_2_modal">
             <div class="window_1">
                 <p>Данный отчёт уже был сформирован.<br>
                     Сформировать новый или использовать текущий?</p>
                 <button class="button_window_1">Новый</button>
                 <button class="button_window_1">Текущий</button>
-
             </div>
         </div>
         <div class="hystmodal" id="window_4_modal">
@@ -66,7 +87,6 @@
                     Сформировать заново?</p>
                 <button class="button_window_1">Нет</button>
                 <button class="button_window_1">Да</button>
-
             </div>
         </div>
         <div class="hystmodal" id="window_3_modal">
@@ -83,26 +103,37 @@
                     </div>
                 </div>
                 <hr>
-                <div id="scroll">
-                    <p class="kurs">1 курс</p>
-                    <div id="kurs_1"></div>
-                    <p class="kurs">2 курс</p>
-                    <div id="kurs_2"></div>
-                    <p class="kurs">3 курс</p>
-                    <div id="kurs_3"></div>
-                    <p class="kurs">4 курс</p>
-                    <div id="kurs_4"></div>
-
-
-                </div>
-                <input class="button_window_1"  value="Готово" type="submit" onclick="hide_pop_up_window_pract('window_3_modal');">
+                <form method="POST">
+                    <div id="scroll">
+                        <p class="kurs">1 курс</p>
+                        <div id="kurs_1"></div>
+                        <p class="kurs">2 курс</p>
+                        <div id="kurs_2"></div>
+                        <p class="kurs">3 курс</p>
+                        <div id="kurs_3"></div>
+                        <p class="kurs">4 курс</p>
+                        <div id="kurs_4"></div>
+                    </div>
+                </form>
             </div>
-
         </div>
     </div>
+<script>
+    // Выберите все кнопки закрытия
+const closeButtons = document.querySelectorAll('.alert-yellow .close');
 
-    <script src="{{ url_for('static',filename='js/script.js') }}">
+// Добавьте обработчик события click для каждой кнопки
+closeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Найдите родительский элемент alert
+    const alert = button.closest('.alert-yellow');
+
+    // Удалите элемент alert из DOM
+    alert.remove();
+  });
+});
+
     </script>
-</body>
 
+</body>
 </html>

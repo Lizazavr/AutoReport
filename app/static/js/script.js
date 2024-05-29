@@ -123,16 +123,41 @@ function find_practic(event){
               for(var i in data)
                 result.push([i, data[i]]);
               fill_practic(result)
+          }
+
+          // Добавить данные для отправки с запросом
+          const type = new FormData();
+          type.append('type', 'report');
+
+          // Послать запрос
+          request.send(type);
+          return false;
+      };
+  }
+
+ function gen_report_request(event){
+    //
+    // Создает POST запрос для кнопки "Обновить данные об учебных планах"
+    //
+    hide_pop_up_window_pract('window_3_modal');
+
+      document.querySelector('#form').onsubmit = () => {
+
+          // Инициализировать новый запрос
+          const request = new XMLHttpRequest();
+          request.open('POST', '/');
+
+// Функция обратного вызова, когда запрос завершен
+          request.onload = () => {
+
+              // Извлечение данных JSON из запроса
+              const data = JSON.parse(request.responseText);
 
           }
 
           // Добавить данные для отправки с запросом
-          x = document.getElementById('user_term').value
-          y = document.getElementById('user_year').value
           const type = new FormData();
-          type.append('type', 'report');
-          type.append('user_year', String(y));
-          type.append('user_term', String(x));
+          type.append('type', 'gen_report');
 
           // Послать запрос
           request.send(type);
