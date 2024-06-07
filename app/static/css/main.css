@@ -39,6 +39,31 @@ select {
     text-align: center;
     height: 35pt;
     width: 135pt;
+    transition: background-color 0.3s; /* Добавить анимацию при наведении */
+}
+
+.button_message {
+    font-family: 'PT Serif', sans-serif;
+    font-size: 16px;
+    border-color: #747474;
+    border-width: 1px;
+    border-radius: 3px;
+    border-style: solid;
+    padding: 0px 1px;
+    text-align: center;
+    height: 25pt;
+    width: 115pt;
+    transition: background-color 0.3s; /* Добавить анимацию при наведении */
+    margin:20px;
+    margin-top:5px
+}
+
+.button:hover {
+  background-color: #e6e6e6; /* Изменить цвет фона при наведении */
+}
+
+.button:active {
+  background-color: #f2f2f2; /* Изменить цвет фона при нажатии */
 }
 
 
@@ -114,7 +139,6 @@ select {
 
 #pract, #kurs_1, #kurs_2, #kurs_3, #kurs_4{
     display: grid;
-    grid-template-columns: 12% 22% 28% 32% 30px;
     font-size: 14px;
 }
 
@@ -169,14 +193,6 @@ input[type="submit"]{
 
 #report{
     font-size: 24px;
-}
-
-a{
-    display: block;
-    width:300px; /*use your preferred width*/
-    margin-left:auto;
-    margin-right:auto;
-    margin-top: 50px;
 }
 
 a:active{

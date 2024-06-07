@@ -10,6 +10,113 @@
         #myModal {
             display: none;
         }
+
+        .window_1 {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            text-align: center;
+            position: fixed;
+            height: 130px;
+
+        }
+
+        .button_window_1 {
+            margin: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            margin-top: 10%;
+            padding: 20px;
+            border: 1px solid #888;
+            height: 110px;
+            width: 400px;
+            border-radius: 10px; /* Добавляем закругленные углы */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            }
+
+.practic_modal{
+width: 54%;
+height: 65%;
+}
+
+.item_practic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.item_practic > div {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.item_practic > div:last-child {
+    margin-right: 0;
+}
+
+.practic_modal .modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.practic_modal .scroll-container {
+    padding-right: 20px;
+}
+
+.practic_modal .modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.practic_modal .scroll-container {
+    padding-right: 20px;
+}
+
+.practic_modal #pract .row {
+    display: flex;
+    align-items: center;
+}
+
+.practic_modal .item_practic {
+    display: flex;
+    align-items: center;
+}
+
+
+.practic_modal .delete-row {
+    justify-self: end;
+    margi: 0;
+}
+
+.practic_modal .bi {
+    vertical-align: -.125em;
+}
+
+.col-md-4 {
+margin-right: 30px;
+margin-left: 30px;
+}
+
+
     </style>
 </head>
 <body onload="find_date();">
@@ -54,71 +161,170 @@
             </select>
         </div>
         {{ form.hidden_tag() }}
+
         <div>
             {{ form.update_bd(class="button button-text-wrap") }}
         </div>
         <div>
             {{ form.form_report(class="btn btn-success button") }}
+
         </div>
         <div>
             {{ form.dowland_report(class="btn btn-secondary button") }}
         </div>
     </form>
-    <div id="test"></div>
-    <div id="modal">
-        <div class="hystmodal" id="window_1_modal">
-            <div class="window_1" id="window_1">
-                <div id="window_messeg"></div>
-                <button class="button_window_1" onclick="hide_pop_up_window();">Ok</button>
-            </div>
-        </div>
 
-        <div class="hystmodal" id="window_2_modal">
-            <div class="window_1">
-                <p>Данный отчёт уже был сформирован.<br>
-                    Сформировать новый или использовать текущий?</p>
-                <button class="button_window_1">Новый</button>
-                <button class="button_window_1">Текущий</button>
-            </div>
-        </div>
-        <div class="hystmodal" id="window_4_modal">
-            <div class="window_1">
-                <p>Данный отчёт уже был добавлен на сервер.<br>
-                    Сформировать заново?</p>
-                <button class="button_window_1">Нет</button>
-                <button class="button_window_1">Да</button>
-            </div>
-        </div>
-        <div class="hystmodal" id="window_3_modal">
-            <div class="window_2" id="window_2">
-                <p id="pract_text_1">Практики<br>
-                    весенний семестр</p>
-                <hr>
-                <div id="pract">
-                    <p>Группа</p>
-                    <p>Тип практики</p>
-                    <p>Период прохождения</p>
-                    <p>ФИО преподавателя</p>
-                    <div>
-                    </div>
-                </div>
-                <hr>
-                <form method="POST">
-                    <div id="scroll">
-                        <p class="kurs">1 курс</p>
-                        <div id="kurs_1"></div>
-                        <p class="kurs">2 курс</p>
-                        <div id="kurs_2"></div>
-                        <p class="kurs">3 курс</p>
-                        <div id="kurs_3"></div>
-                        <p class="kurs">4 курс</p>
-                        <div id="kurs_4"></div>
-                    </div>
-                </form>
+    <!-- Модальное окно для нового отчета -->
+    <div id="reportModal" class="modal" {% if show_report_modal %}style="display: block;"{% endif %}>
+        <div class="modal-content">
+            <span class="close" style="position: absolute; top: 10px; right: 10px;">&times;</span>
+            <p style="text-align: center;" class="text">Данный отчёт уже был сформирован.<br>
+                Сформировать новый или использовать текущий?</p>
+            <div style="display: flex; justify-content: center;">
+                {{ modal_form.new_report(class="btn button_message") }}
+                {{ modal_form.current_report(class="btn button_message") }}
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно для добавления отчета -->
+    <div id="addReportModal" class="modal" {% if show_add_report_modal %}style="display: block;"{% endif %}>
+        <div class="modal-content">
+            <span class="close" style="position: absolute; top: 10px; right: 10px;">&times;</span>
+            <p style="text-align: center;" class="text">Данный отчёт уже был добавлен на сервер.<br>
+                Сформировать заново?</p>
+            <div style="display: flex; justify-content: center;">
+            {{ modal_form.no_new_report(class="btn button_message") }}
+            {{ modal_form.add_report(class="btn button_message") }}
+            </div>
+        </div>
+    </div>
+
+<!-- Модальное окно -->
+<div id="practiceModal" class="modal hystmodal">
+    <div class="modal-content window_2 practic_modal">
+        <span class="close" style="position: absolute; top: 10px; right: 10px;">&times;</span>
+        <p id="pract_text_1">Практики<br>
+            {{ semester_name }} семестр</p>
+        <hr>
+        <div id="pract">
+            <div class="row">
+                <div class="col-md-4 text" >Группа</div>
+                <div class="col-md-4 text">Тип практики</div>
+                <div class="col-md-4 text">Период прохождения</div>
+                <div class="col-md-4 text">ФИО преподавателя</div>
+                <div class="col-md-1 text"></div>
+            </div>
+        </div>
+        <hr>
+        <div class="modal-body">
+            <form method="POST" action="{{ url_for('index') }}">
+                {{ practic_form.hidden_tag() }}
+                <div class="scroll-container">
+                    {% for course, groups in course_groups.items() %}
+                    <p class="kurs">{{ course }} курс</p>
+                    {% for group in groups %}
+                    <div class="row item_practic">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="{{ group }}" disabled>
+                        </div>
+                        <div class="col-md-3">
+                            {{ practic_form.practice_type(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ practic_form.period(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ practic_form.teacher(class="form-control") }}
+                        </div>
+                        <div class="col-md-1">
+    <a href="#" class="delete-row">
+        <svg class="bi bi-trash text-info" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+        </svg>
+    </a>
+</div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ practic_form.submit(class="btn btn-primary button_message") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <div id="test"></div>
+    <div id="modal">
+
+        <div class="hystmodal">
+        {% if show_upload_modal %}
+        <div class="window_1">
+            <div id="window_messeg">
+                <p style="text-align: center; margin-top:0" class="text">Выберите файл для загрузки</p>
+            </div>
+            <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <br>
+            {{ form.report_file }}
+                <br>
+            <button class="button_window_1 button_message" type="submit" onclick="document.getElementById('modal').style.display = 'none';">Загрузить</button>
+            <button class="button_window_1 button_message" type="button" onclick="document.getElementById('modal').style.display = 'none';">Отмена</button>
+        </form>
+                </div>
+        </div>
+        {% endif %}
+        </div>
+    </div>
 <script>
+    var modal = document.getElementById("practiceModal");
+        var btn = document.getElementById("addPractice");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+// Закрываем модальные окна после успешной отправки данных
+        {% if close_modal %}
+        document.getElementById("reportModal").style.display = "none";
+        document.getElementById("addReportModal").style.display = "none";
+        {% endif %}
+
+        // Обработка закрытия модальных окон
+        var modals = document.getElementsByClassName("modal");
+        var spans = document.getElementsByClassName("close");
+        for (var i = 0; i < modals.length; i++) {
+            spans[i].onclick = function() {
+                this.parentElement.parentElement.style.display = "none";
+            }
+            window.onclick = function(event) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+// Проверяем, есть ли переменная show_upload_modal и равна ли она True
+        {% if show_upload_modal %}
+        // Отображаем модальное окно
+        document.getElementById('modal').style.display = 'block';
+        {% endif %}
+
     // Выберите все кнопки закрытия
 const closeButtons = document.querySelectorAll('.alert-yellow .close');
 
