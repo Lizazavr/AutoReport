@@ -283,61 +283,87 @@ margin-left: 30px;
         </div>
     </div>
 <script>
-    var modal = document.getElementById("practiceModal");
-        var btn = document.getElementById("addPractice");
-        var span = document.getElementsByClassName("close")[0];
-        btn.onclick = function() {
-            modal.style.display = "block";
+        // Получаем элемент модального окна "practiceModal"
+var modal = document.getElementById("practiceModal");
+
+// Получаем кнопку "addPractice", которая открывает модальное окно
+var btn = document.getElementById("addPractice");
+
+// Получаем элемент "close", который закрывает модальное окно
+var span = document.getElementsByClassName("close")[0];
+
+// Обработчик события клика на кнопку "addPractice"
+btn.onclick = function() {
+    // Отображаем модальное окно
+    modal.style.display = "block";
+}
+
+// Обработчик события клика на элемент "close"
+span.onclick = function() {
+    // Скрываем модальное окно
+    modal.style.display = "none";
+}
+
+// Обработчик события клика вне модального окна
+window.onclick = function(event) {
+    // Если клик произошел за пределами модального окна
+    if (event.target == modal) {
+        // Скрываем модальное окно
+        modal.style.display = "none";
+    }
+}
+
+// Проверяем наличие переменной "close_modal" и ее значение
+{% if close_modal %}
+    // Скрываем модальные окна "reportModal" и "addReportModal"
+    document.getElementById("reportModal").style.display = "none";
+    document.getElementById("addReportModal").style.display = "none";
+{% endif %}
+
+// Получаем все модальные окна на странице
+var modals = document.getElementsByClassName("modal");
+
+// Получаем все элементы "close" на странице
+var spans = document.getElementsByClassName("close");
+
+// Обход всех модальных окон и обработчики событий
+for (var i = 0; i < modals.length; i++) {
+    // Обработчик события клика на элемент "close"
+    spans[i].onclick = function() {
+        // Скрываем родительский элемент модального окна
+        this.parentElement.parentElement.style.display = "none";
+    }
+
+    // Обработчик события клика вне модального окна
+    window.onclick = function(event) {
+        // Если клик произошел за пределами модального окна
+        if (event.target == modals[i]) {
+            // Скрываем модальное окно
+            modals[i].style.display = "none";
         }
+    }
+}
 
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
+// Проверяем наличие переменной "show_upload_modal" и ее значение
+{% if show_upload_modal %}
+    // Отображаем модальное окно с id "modal"
+    document.getElementById('modal').style.display = 'block';
+{% endif %}
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-// Закрываем модальные окна после успешной отправки данных
-        {% if close_modal %}
-        document.getElementById("reportModal").style.display = "none";
-        document.getElementById("addReportModal").style.display = "none";
-        {% endif %}
-
-        // Обработка закрытия модальных окон
-        var modals = document.getElementsByClassName("modal");
-        var spans = document.getElementsByClassName("close");
-        for (var i = 0; i < modals.length; i++) {
-            spans[i].onclick = function() {
-                this.parentElement.parentElement.style.display = "none";
-            }
-            window.onclick = function(event) {
-                if (event.target == modals[i]) {
-                    modals[i].style.display = "none";
-                }
-            }
-        }
-// Проверяем, есть ли переменная show_upload_modal и равна ли она True
-        {% if show_upload_modal %}
-        // Отображаем модальное окно
-        document.getElementById('modal').style.display = 'block';
-        {% endif %}
-
-    // Выберите все кнопки закрытия
+// Получаем все кнопки закрытия с классом "close" внутри элементов с классом "alert-yellow"
 const closeButtons = document.querySelectorAll('.alert-yellow .close');
 
-// Добавьте обработчик события click для каждой кнопки
+// Обход всех кнопок закрытия и добавление обработчика события клика
 closeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    // Найдите родительский элемент alert
-    const alert = button.closest('.alert-yellow');
+    button.addEventListener('click', () => {
+        // Находим родительский элемент с классом "alert-yellow"
+        const alert = button.closest('.alert-yellow');
 
-    // Удалите элемент alert из DOM
-    alert.remove();
-  });
+        // Удаляем элемент "alert-yellow" из DOM
+        alert.remove();
+    });
 });
+
 
     </script>
 

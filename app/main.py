@@ -61,6 +61,11 @@ class PracticeForm(FlaskForm):
     items = FieldList(FormField(PracticeItemForm), min_entries=16)
     submit = SubmitField('Готово')
 
+class OneReportForm(FlaskForm):
+    download_report = SubmitField('Скачать отчёт')
+    upload_report = SubmitField('Загрузить отчёт')
+    add_to_server = SubmitField('Добавить отчёт на сервер')
+
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
     file = request.files['report_file']
@@ -87,11 +92,10 @@ def index():
         '3': ['301', '302', '303'],
         '4': ['401', '402', '403']
     }
-    semester_name = 'Весенний'
+    semester_name = "весенний"
 
     if request.method == 'POST':
         if form.validate_on_submit():
-            print(1)
             if form.update_bd.data:
                 #answer = update_curriculum()
                 #answer = 'Данные об учебных планах обновлены', 'success'
@@ -99,11 +103,29 @@ def index():
                 show_popup_message(answer, type_answer)
                 return redirect(url_for('index'))
             elif form.form_report.data:
-                pass
+                course_groups = {
+                    '1': ['101', '102', '103'],
+                    '2': ['201', '202', '203'],
+                    '3': ['301', '302', '303'],
+                    '4': ['401', '402', '403']
+                }
+                semester_name = 'Весенний'
+                return render_template('main.html', form=form,
+                                       modal_form=modal_form,
+                                       practic_form=practic_form,
+                                       now_year=datetime.now().year,
+                                       show_upload_modal=False,
+                                       show_report_modal=show_report_modal,
+                                       show_add_report_modal=show_add_report_modal,
+                                       close_modal=close_modal,
+                                       count_group=count_group,
+                                       course_groups=course_groups,
+                                       semester_name=semester_name)
             elif form.dowland_report.data:
-                print("windows")
                 # Открываем всплывающее окно для загрузки файла
-                return render_template('main.html', form=form, modal_form=modal_form, practic_form=practic_form, now_year=datetime.now().year, show_upload_modal=True, show_report_modal=show_report_modal, show_add_report_modal=show_add_report_modal, close_modal=close_modal)
+                return render_template('main.html', form=form, modal_form=modal_form, practic_form=practic_form,
+                                       now_year=datetime.now().year, show_upload_modal=True, show_report_modal=show_report_modal,
+                                       show_add_report_modal=show_add_report_modal, close_modal=close_modal)
             elif form.submit.data:
                 file = form.report_file.data
                 filename = file.filename
@@ -121,8 +143,8 @@ def index():
             # Добавьте логику для использования существующего отчета
             elif form.add_report.data:
                 show_add_report_modal = True
-    return render_template('main.html', form=form, modal_form=modal_form, practic_form=practic_form, \
-                           now_year=datetime.now().year, show_upload_modal=False, show_report_modal=show_report_modal, \
+    return render_template('main.html', form=form, modal_form=modal_form, practic_form=practic_form,
+                           now_year=datetime.now().year, show_upload_modal=False, show_report_modal=show_report_modal,
                            show_add_report_modal=show_add_report_modal, close_modal=close_modal,
                            count_group=count_group, course_groups=course_groups, semester_name=semester_name)
 
@@ -141,21 +163,32 @@ def web_report():
     @return: вызов функций или render_template('main.html')
     """
     global year, term, type_report, name_report
-    if request.method == 'POST':
-        print("post")
-        values = request.form.get('type')
-        if values == 'dowland_report':
+    report_form = OneReportForm()
+    type_report = 'сформирован'
+    name_report = 'название_отчёта.doc'
+
+    if report_form.validate_on_submit():
+        if report_form.download_report.data:
             print("Скачивание отчёта")
+            answer, type_answer = 'Файл успешно скачен!', 'success'
+            show_popup_message(answer, type_answer)
             # return download_report()
-        elif values == 'upload_report':
+        elif report_form.upload_report.data:
             print("Загрузка отчёта")
-            file = request.form.get('file')
-            # return load_changed_report(year, term, file)
-        elif values == 'upload_report':
-            print("Загрузка отчёта")
-            file = request.form.get('file')
-            # return load_changed_report(year, term, file)
-    return render_template('report.html')
+            file = report_form.upload_report.data
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            answer, type_answer = 'Файл успешно загружен!', 'success'
+            show_popup_message(answer, type_answer)
+            return redirect(url_for('index'))
+            # return load_changed_report(year, term, report_form.name_report.data)
+        elif report_form.add_to_server.data:
+            print("Добавление отчёта на сервер")
+            answer, type_answer = 'Файл успешно добавлен!', 'success'
+            show_popup_message(answer, type_answer)
+            # return add_report_to_server(report_form.name_report.data)
+
+    return render_template('report.html', report_form=report_form, name_report=name_report, type_report=type_report)
 
 if __name__ == "__main__":
     app.run(debug=True)

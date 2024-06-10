@@ -7,6 +7,14 @@
     <meta name="name_report" content="width=device-width, initial-scale=1.0">
     <title>Вторая страница</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+    <style>
+        .center-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+    </style>
 </head>
 
 <body>
@@ -14,17 +22,18 @@
     <p class="text" id="report_name">{{ name_report }}</p>
     <div class="buttons">
         <div>
-            <input class="button" value="Скачать отчёт" type="submit" onclick="dowland_report();">
+            {{ report_form.download_report(class_="button") }}
         </div>
         <div>
-
-            <input class="button" value="Загрузить отчёт" type="submit" onclick="upload_report();">
+            {{ report_form.upload_report(class_="button") }}
         </div>
         <div>
-            <input class="button" value="Добавить отчёт на сервер" type="submit" onclick="add_server();">
+            {{ report_form.add_to_server(class_="button") }}
         </div>
     </div>
-    <a class="text" href="C:\Users\ACER PC User\Desktop\Новая папка\new.html">Вернуться к формированию отчет</a>
+    <div class="center-link">
+        <a class="text" href="C:\Users\ACER PC User\Desktop\Новая папка\new.html">Вернуться к формированию отчет</a>
+    </div>
     <script src="{{ url_for('static',filename='js/script.js') }}">
     </script>
 </body>
